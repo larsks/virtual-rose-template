@@ -86,8 +86,8 @@ objects:
                 bus: virtio
               name: cloudinitdisk
             - bootOrder: 1
-              cdrom:
-                bus: sata
+              disk:
+                bus: virtio
               name: rootdisk
             - disk:
                 bus: virtio
