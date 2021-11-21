@@ -75,6 +75,13 @@ objects:
         labels:
           kubevirt.io/domain: ${NAME}
       spec:
+        accessCredentials:
+          - sshPublicKey:
+              source:
+                secret:
+                  secretName: authorizedsshkeys-${NAME}
+              propagationMethod:
+                configDrive: {}
         domain:
           cpu:
             cores: 4
@@ -114,23 +121,9 @@ objects:
           pod: {}
         terminationGracePeriodSeconds: 180
         volumes:
-        - cloudInitNoCloud:
+        - cloudInitConfigDrive:
             userData: |
               #cloud-config
-              user: centos
-              password: centos
-              chpasswd:
-                expire: false
-              ssh_authorized_keys:
-                - >-
-                  ssh-rsa
-                  AAAAB3NzaC1yc2EAAAADAQABAAABgQC9hLzJmRsL6h4mzJyPS4Z1JnNe1VOYf7rs3tWN/Z5P5hKW3trA4gTlEGDckj1FqTkBbSyWgysiPUeQgGb7OAdCyPIaHGPysCBWLRWl/LjrRsNbENcMeY/svRzkHww70x1FkZ23oDw4yk1Km7PmBqaJa8VpDsWGt4z7Em1ud7fSFVmH6UlQg08RJXeZmJIlwwmJkBso0IytbWK8MiV2OzeonCYISBejBpsocAS+7PtdAQ7NQOW+bqzVsyZHaaiDJun3aTMCirFlHbSJANxuvcGyyx43crUBcyXgPwXACKpYSik11tJgbno3JYY039jxUNapBdWGZpCIcX9tbVodYknxjGCB8INdad7LVAACVxP2PrhBrgoRs2y85/8FwIaZPeO+IunCxr9T+2AIivwC6Tk8bHXEoNiteZCBRmSMF/f5l793u59WkuE4F4JizmCnT9/n9Z9aAYkyHna7yQ6MQ481o3JJg/T12qhXyJQmMEdtie2UrR1GWvJ7MsVXaYQciWs=
-                  sleviim@sleviim.redhat
-                - >-
-                  ssh-rsa
-                  AAAAB3NzaC1yc2EAAAADAQABAAABgQDMxISEo+fmk1gL9uYuUJllKyks+2hXn9iSszUtKlNHvcEHzxhOa7pK+pjo5QGixET+TBaBGz7j7vX6zhbx44H0D1EnU5jvUjRZX4ysuOTlzUquoJ0ufm1y934smo6zO/JCpw3+kJgNs3xqthPNFXbqYCkHAqEjSU+qNgYSx2zK++4M21gHiyY8z4GXEyeQwqr65FHypHAAA6Tf4/mhH3bHT5A89xKcGBlJhfSkKPIeSaec+Vis18GYHQ9QGg442j9Okjhnb2V7oYyajQ+vIv7UUWTcdoRWSPFbW0wOfKw2100sPIGL6dV+gQg4rCJ2E5Rq/KawKP2XDI24mAs7HeBjXZFg8rjwsPWTJ4IkNegSlS5G2kb0tfow9PJVXcVhlPhrhyiIUoTLx9wUx4yMp2Tu1VeZptrWCMRXyJvW88Faj4YOmAlocEyXGVoms2pH+CywGD3FG4GmYy6+VyvmTT/1Bnp+fdpy1nw4+Q9Ude25lgXy2/077Fx3UobKNMKW/X0=
-                  speretz@speretz.tlv.csb
-                - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDHU+dRblINH9VOKWKluyyE1xz0GG6YMIiTCgUlDrEzvybC0Y0luIj87rQFHmihYFrmYdrCe2v2dFo1LggJEMPh3jfrXzJVl7KjbTOdsUSVwWCHD07uAiyNmH7aNGFuS4B6oiQj5NSTzl5C0Mvt/JIZmkky2305tZoF40bGlHP/U3tXoU+QPRqV44HR0AdkMArHADQoR/cpEQJantNuQsV2BouzfOJ8GcFLDU2ZPESgubrd4CxQ7p2+uujl0WsTsz0Ip3FkJINBHBnOGM9NteHVsiGJgmg3oeOhcH31bjYOToRNKvjAiepAsQMjhfm3GE850DcFJO6kEGD8umbhRiXZIfGJkqw1HWzcaN09q9cOWczMUytGBy6BGc7eNdf03F9FHLOO8c5gcA6Sd7rJFZD6LbRv+O8mtbLpL9Bi41I/5vNgNo0HI0Z2w56r9F8rRQ+jy4HR29hvV5yR7LZHC2kJ3TZiZBeqy5UG6SlQI4fOq1JHQ9/IzT4wV+sxQz38k3Yir6RE/Yg9N8wTMxpYG5/LsXa/eGRThCRbbaY5IgSK4NAWDDhMEt9TqTwrNSzEMi6Xv5DLROtyctUNN5fcN2M+evcJ4GqUgaw87e6Jk89cyQj/f3XLRjO2Yxudl5uLDd4f5aOnMJxsr8+3j5xMe8BNM9VkZqhPM/FEhi40xAl9lQ==
           name: cloudinitdisk
         - dataVolume:
             name: ${NAME}-rootdisk
@@ -142,7 +135,3 @@ parameters:
 - description: Name for the new VM
   name: NAME
   required: true
-- description: Randomized password for the cloud-init user
-  from: '[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}'
-  generate: expression
-  name: CLOUD_USER_PASSWORD
