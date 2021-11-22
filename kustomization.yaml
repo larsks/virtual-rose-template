@@ -4,3 +4,4 @@ namespace: vr2-fall2021-virtualrose2021
 resources:
   - template/rose-service-template.yaml
   - template/rose-vm-template.yaml
+  - template/rose-integrated-template.yaml
