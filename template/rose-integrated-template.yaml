@@ -7,7 +7,7 @@ objects:
   - apiVersion: v1
     kind: Service
     labels:
-      app: ${NAME}
+      kubevirt.io/domain: ${NAME}
     metadata:
       name: ${NAME}
     spec:
@@ -42,8 +42,8 @@ objects:
             }
           ]
       labels:
-        app: ${NAME}
-        vm.kubevirt.io/template: rose-vm-template
+        kubevirt.io/domain: ${NAME}
+        vm.kubevirt.io/template: rose-integrated-template
       name: ${NAME}
     spec:
       dataVolumeTemplates:

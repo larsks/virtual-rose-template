@@ -6,7 +6,8 @@ objects:
 - apiVersion: v1
   kind: Service
   labels:
-    app: ${NAME}
+    labels:
+      kubevirt.io/domain: ${NAME}
   metadata:
     name: ${NAME}
   spec:
@@ -19,6 +20,9 @@ objects:
         port: 443
       - name: rdp
         port: 3389
+      - name: rdp-alt
+        port: 3390
+        targetPort: 3389
     selector:
       kubevirt.io/domain: ${NAME}
     type: LoadBalancer
