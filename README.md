@@ -80,8 +80,9 @@ for sshkey in *.pub; do
   echo "${ip}" > "${username}.ip"
 
   oc get vm "${username}" \
-    -o go-template='{{index .metadata.annotations "massopen.cloud/password"}}' \
+   -o jsonpath='{ .metadata.annotations.massopen\.cloud/password }' \
     > "${username}.password"
+
 
 done
 ```
@@ -105,5 +106,5 @@ retrieve that password with the following command:
 
 ```
 oc get vm <vm name> \
-  -o go-template='{{index .metadata.annotations "massopen.cloud/password"}}'
+  -o jsonpath='{ .metadata.annotations.massopen\.cloud/password }'
 ```
