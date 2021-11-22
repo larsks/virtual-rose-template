@@ -8,17 +8,14 @@ metadata:
     template.kubevirt.ui/parent-provider: Red Hat
     template.kubevirt.ui/parent-provider-url: https://www.centos.org
     template.kubevirt.ui/parent-support-level: Community
-  creationTimestamp: "2021-11-21T14:14:21Z"
   labels:
     os.template.kubevirt.io/centos8: "true"
     template.kubevirt.io/type: vm
-    vm.kubevirt.io/template: centos8-desktop-large
-    vm.kubevirt.io/template.namespace: openshift
+    vm.kubevirt.io/template: vm-rose-template
+    vm.kubevirt.io/template.namespace: vr2-fall2021-virtualrose2021
     workload.template.kubevirt.io/desktop: "true"
   name: vm-rose-template
   namespace: vr2-fall2021-virtualrose2021
-  resourceVersion: "135713934"
-  uid: dc3acd9c-87fb-44b6-a7dd-c990900ad2ce
 objects:
 - apiVersion: kubevirt.io/v1
   kind: VirtualMachine
@@ -36,9 +33,7 @@ objects:
         ]
     labels:
       app: ${NAME}
-      vm.kubevirt.io/template: centos8-desktop-large
-      vm.kubevirt.io/template.revision: "1"
-      vm.kubevirt.io/template.version: v0.16.2
+      vm.kubevirt.io/template: vm-rose-template
     name: ${NAME}
   spec:
     dataVolumeTemplates:
@@ -69,12 +64,9 @@ objects:
     template:
       metadata:
         annotations:
-          vm.kubevirt.io/flavor: large
           vm.kubevirt.io/os: centos8
-          vm.kubevirt.io/workload: desktop
         labels:
           kubevirt.io/domain: ${NAME}
-          kubevirt.io/size: large
       spec:
         domain:
           cpu:
@@ -98,8 +90,7 @@ objects:
               name: tablet
               type: tablet
             interfaces:
-            - macAddress: ""
-              masquerade: {}
+            - masquerade: {}
               model: virtio
               name: default
             networkInterfaceMultiqueue: true
