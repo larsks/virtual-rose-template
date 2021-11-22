@@ -4,10 +4,11 @@ metadata:
   annotations:
     iconClass: icon-centos
     name.os.template.kubevirt.io/centos8: CentOS 8 or higher
-    template.kubevirt.io/provider: Red Hat Virtusl ROSE
+    template.kubevirt.io/provider: Red Hat Virtual ROSE
     template.kubevirt.ui/parent-provider: Red Hat
     template.kubevirt.ui/parent-provider-url: https://www.centos.org
     template.kubevirt.ui/parent-support-level: Community
+    openshift.io/display-name: Virtual ROSE Template
   labels:
     os.template.kubevirt.io/centos8: "true"
     template.kubevirt.io/type: vm
