@@ -1,0 +1,142 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: rose-integrated-template
+  namespace: vr2-fall2021-virtualrose2021
+objects:
+  - apiVersion: v1
+    kind: Service
+    labels:
+      app: ${NAME}
+    metadata:
+      name: ${NAME}
+    spec:
+      ports:
+        - name: ssh
+          port: 22
+        - name: http
+          port: 80
+        - name: https
+          port: 443
+        - name: rdp
+          port: 3389
+      selector:
+        kubevirt.io/domain: ${NAME}
+      type: LoadBalancer
+  - apiVersion: kubevirt.io/v1
+    kind: VirtualMachine
+    metadata:
+      annotations:
+        massopen.cloud/password: ${CLOUD_USER_PASSWORD}
+        vm.kubevirt.io/validations: |
+          [
+            {
+              "name": "minimal-required-memory",
+              "path": "jsonpath::.spec.domain.resources.requests.memory",
+              "rule": "integer",
+              "message": "This VM requires more memory.",
+              "min": 1610612736
+            }
+          ]
+      labels:
+        app: ${NAME}
+        vm.kubevirt.io/template: rose-vm-template
+      name: ${NAME}
+    spec:
+      dataVolumeTemplates:
+        - metadata:
+            name: ${NAME}-rootdisk
+            namespace: vr2-fall2021-virtualrose2021
+          spec:
+            pvc:
+              accessModes:
+                - ReadWriteMany
+              resources:
+                requests:
+                  storage: 25Gi
+              storageClassName: ocs-external-storagecluster-ceph-rbd
+              volumeMode: Block
+            source:
+              pvc:
+                name: centos-8.4
+                namespace: openshift-virtualization-os-images
+      running: true
+      template:
+        metadata:
+          annotations:
+            vm.kubevirt.io/os: centos8
+          labels:
+            kubevirt.io/domain: ${NAME}
+        spec:
+          domain:
+            cpu:
+              cores: 4
+              sockets: 1
+              threads: 1
+            devices:
+              disks:
+                - disk:
+                    bus: virtio
+                  name: cloudinitdisk
+                - bootOrder: 1
+                  disk:
+                    bus: virtio
+                  name: rootdisk
+              inputs:
+                - bus: virtio
+                  name: tablet
+                  type: tablet
+              interfaces:
+                - masquerade: {}
+                  model: virtio
+                  name: default
+              networkInterfaceMultiqueue: true
+              rng: {}
+            machine:
+              type: pc-q35-rhel8.4.0
+            resources:
+              requests:
+                cpu: 4
+                memory: 8Gi
+              limits:
+                cpu: 4
+                memory: 8Gi
+          evictionStrategy: LiveMigrate
+          hostname: ${NAME}
+          networks:
+            - name: default
+              pod: {}
+          terminationGracePeriodSeconds: 180
+          volumes:
+            - cloudInitConfigDrive:
+                userData: |
+                  #cloud-config
+                  user: centos
+                  password: ${CLOUD_USER_PASSWORD}
+                  chpasswd:
+                    expire: false
+                  ssh_authorized_keys:
+                    - >-
+                      ssh-rsa
+                      AAAAB3NzaC1yc2EAAAADAQABAAABgQC9hLzJmRsL6h4mzJyPS4Z1JnNe1VOYf7rs3tWN/Z5P5hKW3trA4gTlEGDckj1FqTkBbSyWgysiPUeQgGb7OAdCyPIaHGPysCBWLRWl/LjrRsNbENcMeY/svRzkHww70x1FkZ23oDw4yk1Km7PmBqaJa8VpDsWGt4z7Em1ud7fSFVmH6UlQg08RJXeZmJIlwwmJkBso0IytbWK8MiV2OzeonCYISBejBpsocAS+7PtdAQ7NQOW+bqzVsyZHaaiDJun3aTMCirFlHbSJANxuvcGyyx43crUBcyXgPwXACKpYSik11tJgbno3JYY039jxUNapBdWGZpCIcX9tbVodYknxjGCB8INdad7LVAACVxP2PrhBrgoRs2y85/8FwIaZPeO+IunCxr9T+2AIivwC6Tk8bHXEoNiteZCBRmSMF/f5l793u59WkuE4F4JizmCnT9/n9Z9aAYkyHna7yQ6MQ481o3JJg/T12qhXyJQmMEdtie2UrR1GWvJ7MsVXaYQciWs=
+                      sleviim@sleviim.redhat
+                    - >-
+                      ssh-rsa
+                      AAAAB3NzaC1yc2EAAAADAQABAAABgQDMxISEo+fmk1gL9uYuUJllKyks+2hXn9iSszUtKlNHvcEHzxhOa7pK+pjo5QGixET+TBaBGz7j7vX6zhbx44H0D1EnU5jvUjRZX4ysuOTlzUquoJ0ufm1y934smo6zO/JCpw3+kJgNs3xqthPNFXbqYCkHAqEjSU+qNgYSx2zK++4M21gHiyY8z4GXEyeQwqr65FHypHAAA6Tf4/mhH3bHT5A89xKcGBlJhfSkKPIeSaec+Vis18GYHQ9QGg442j9Okjhnb2V7oYyajQ+vIv7UUWTcdoRWSPFbW0wOfKw2100sPIGL6dV+gQg4rCJ2E5Rq/KawKP2XDI24mAs7HeBjXZFg8rjwsPWTJ4IkNegSlS5G2kb0tfow9PJVXcVhlPhrhyiIUoTLx9wUx4yMp2Tu1VeZptrWCMRXyJvW88Faj4YOmAlocEyXGVoms2pH+CywGD3FG4GmYy6+VyvmTT/1Bnp+fdpy1nw4+Q9Ude25lgXy2/077Fx3UobKNMKW/X0=
+                      speretz@speretz.tlv.csb
+                    - ${SSHKEY}
+              name: cloudinitdisk
+            - dataVolume:
+                name: ${NAME}-rootdisk
+              name: rootdisk
+parameters:
+  - description: Name for the new VM
+    name: NAME
+    required: true
+  - description: Student SSH key
+    name: SSHKEY
+    required: true
+  - description: Randomized password for the cloud-init user centos
+    from: '[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}'
+    generate: expression
+    name: CLOUD_USER_PASSWORD
