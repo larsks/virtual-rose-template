@@ -90,6 +90,13 @@ This will create virtual machine and service named after the username.
 The public ip address gets stored in `<username>.ip` and the password
 for the `centos` user goes in `<username>.password`.
 
+## Access using RDP
+
+Due to circumstances beyond our control, RDP access on port 3389 is
+currently blocked for virtual machines on the `ocp-prod` cluster. We
+have exposed RDP access on port `3390` instead. You will need to
+provide this port number when connecting.
+
 ## Password for CentOS user
 
 For security reasons, when you create a new virtual machine from the
