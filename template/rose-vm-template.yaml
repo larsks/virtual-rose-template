@@ -112,6 +112,10 @@ objects:
         - cloudInitConfigDrive:
             userData: |
               #cloud-config
+              user: centos
+              password: ${CLOUD_USER_PASSWORD}
+              chpasswd:
+                expire: false
           name: cloudinitdisk
         - dataVolume:
             name: ${NAME}-rootdisk
@@ -120,3 +124,7 @@ parameters:
 - description: Name for the new VM
   name: NAME
   required: true
+- description: Randomized password for the cloud-init user centos
+  from: '[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}'
+  generate: expression
+  name: CLOUD_USER_PASSWORD
