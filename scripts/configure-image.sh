@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script configures the CentOS cloud image to boot into a
 # desktop environment by default. You can apply the script to an image
