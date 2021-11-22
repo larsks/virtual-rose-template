@@ -9,7 +9,7 @@ objects:
     labels:
       kubevirt.io/domain: ${NAME}
     metadata:
-      name: ${NAME}
+      name: ${NAME}-vm-service
     spec:
       ports:
         - name: ssh
@@ -44,7 +44,7 @@ objects:
       labels:
         kubevirt.io/domain: ${NAME}
         vm.kubevirt.io/template: rose-integrated-template
-      name: ${NAME}
+      name: ${NAME}-vm
     spec:
       dataVolumeTemplates:
         - metadata:
