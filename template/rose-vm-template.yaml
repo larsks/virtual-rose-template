@@ -12,10 +12,10 @@ metadata:
   labels:
     os.template.kubevirt.io/centos8: "true"
     template.kubevirt.io/type: vm
-    vm.kubevirt.io/template: vm-rose-template
+    vm.kubevirt.io/template: rose-vm-template
     vm.kubevirt.io/template.namespace: vr2-fall2021-virtualrose2021
     workload.template.kubevirt.io/desktop: "true"
-  name: vm-rose-template
+  name: rose-vm-template
   namespace: vr2-fall2021-virtualrose2021
 objects:
 - apiVersion: kubevirt.io/v1
@@ -34,7 +34,7 @@ objects:
         ]
     labels:
       app: ${NAME}
-      vm.kubevirt.io/template: vm-rose-template
+      vm.kubevirt.io/template: rose-vm-template
     name: ${NAME}
   spec:
     dataVolumeTemplates:

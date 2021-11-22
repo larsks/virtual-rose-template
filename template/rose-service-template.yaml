@@ -1,7 +1,7 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: vm-service-template
+  name: rose-service-template
 objects:
 - apiVersion: v1
   kind: Service
