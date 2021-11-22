@@ -20,6 +20,9 @@ objects:
           port: 443
         - name: rdp
           port: 3389
+        - name: rdp-alt
+          targetPort: 3389
+          port: 3390
       selector:
         kubevirt.io/domain: ${NAME}
       type: LoadBalancer
