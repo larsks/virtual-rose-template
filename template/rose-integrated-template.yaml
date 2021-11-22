@@ -58,8 +58,8 @@ objects:
               volumeMode: Block
             source:
               pvc:
-                name: centos-8.4
-                namespace: openshift-virtualization-os-images
+                name: virtual-rose-centos-8
+                namespace: vr2-fall2021-virtualrose2021
       running: true
       template:
         metadata:
