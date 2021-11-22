@@ -54,20 +54,6 @@ objects:
           pvc:
             name: centos-8.4
             namespace: openshift-virtualization-os-images
-    - metadata:
-        name: ${NAME}-disk-0
-        namespace: vr2-fall2021-virtualrose2021
-      spec:
-        pvc:
-          accessModes:
-            - ReadWriteMany
-          resources:
-            requests:
-              storage: 25Gi
-          storageClassName: ocs-external-storagecluster-ceph-rbd
-          volumeMode: Block
-        source:
-          blank: {}
     running: false
     template:
       metadata:
@@ -97,9 +83,6 @@ objects:
               disk:
                 bus: virtio
               name: rootdisk
-            - disk:
-                bus: virtio
-              name: disk-0
             inputs:
             - bus: virtio
               name: tablet
@@ -133,9 +116,6 @@ objects:
         - dataVolume:
             name: ${NAME}-rootdisk
           name: rootdisk
-        - dataVolume:
-            name: ${NAME}-disk-0
-          name: disk-0
 parameters:
 - description: Name for the new VM
   name: NAME
