@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: vr2-fall2021-virtualrose2021
 resources:
   - template/vm-rose-template.yaml
+  - template/vm-service-template.yaml

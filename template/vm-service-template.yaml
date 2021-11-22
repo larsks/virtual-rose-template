@@ -1,0 +1,28 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: vm-service-template
+objects:
+- apiVersion: v1
+  kind: Service
+  labels:
+    app: ${NAME}
+  metadata:
+    name: ${NAME}
+  spec:
+    ports:
+      - name: ssh
+        port: 22
+      - name: http
+        port: 80
+      - name: https
+        port: 443
+      - name: rdp
+        port: 3389
+    selector:
+      kubevirt.io/domain: ${NAME}
+    type: LoadBalancer
+parameters:
+- description: Name for the new VM
+  name: NAME
+  required: true
