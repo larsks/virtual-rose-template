@@ -50,8 +50,9 @@ objects:
           storageClassName: ocs-external-storagecluster-ceph-rbd
           volumeMode: Block
         source:
-          http:
-            url: https://cloud.centos.org/centos/8/x86_64/images/CentOS-8-GenericCloud-8.4.2105-20210603.0.x86_64.qcow2
+          pvc:
+            name: centos-8.4
+            namespace: openshift-virtualization-os-images
     - metadata:
         name: ${NAME}-disk-0
         namespace: vr2-fall2021-virtualrose2021
