@@ -113,3 +113,12 @@ retrieve that password with the following command:
 oc get vm <vm name> \
   -o jsonpath='{ .metadata.annotations.massopen\.cloud/password }'
 ```
+
+## Updating the template
+
+After editing the template in this repository, you can apply it to the
+cluster by running:
+
+```
+oc apply -k .
+```
